@@ -42,8 +42,8 @@ src/
   @types/express.d.ts     เพิ่ม Type ให้ Request
   config/env.ts          ตรวจ Environment Variables
   routes/                จับคู่ Method กับ URL
-  controllers/           ตรวจ Request และตอบ Response
-  services/              จัดการข้อมูลและ Query ฐานข้อมูล
+  controllers/           ตรวจ Request, เรียก Service และตอบ Response
+  services/              จัดการข้อมูลผู้ใช้และ Task ผ่าน Prisma
   schemas/               Zod Validation และ Input Types
   middlewares/           Authentication, ID Validation และ Error Handling
   utils/                 AppError, Password Hash และ JWT

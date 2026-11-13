@@ -1,12 +1,8 @@
 import 'express';
+import type { JwtPayload } from '../utils/jwt.ts';
 
-declare global {
-  namespace Express {
-    interface Request {
-      user?: { userId: number };
-      taskId?: number;
-    }
+declare module 'express' {
+  interface Request {
+    user?: JwtPayload;
   }
 }
-
-export {};

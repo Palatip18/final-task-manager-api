@@ -5,9 +5,8 @@ import { validateTaskId } from '../middlewares/validate-task-id.ts';
 
 export const taskRouter = Router();
 
-taskRouter.use(authenticate);
-taskRouter.post('/', json(), taskController.create);
-taskRouter.get('/', taskController.getAll);
-taskRouter.get('/:id', validateTaskId, taskController.getById);
-taskRouter.patch('/:id', validateTaskId, json(), taskController.update);
-taskRouter.delete('/:id', validateTaskId, taskController.remove);
+taskRouter.post('/', authenticate, json(), taskController.create);
+taskRouter.get('/', authenticate, taskController.getAll);
+taskRouter.get('/:id', authenticate, validateTaskId, taskController.getById);
+taskRouter.patch('/:id', authenticate, validateTaskId, json(), taskController.update);
+taskRouter.delete('/:id', authenticate, validateTaskId, taskController.remove);

@@ -1,34 +1,74 @@
-import { Prisma } from '@prisma/client';
 import { prisma } from '../lib/prisma.ts';
 import type { CreateTaskInput, UpdateTaskInput } from '../schemas/task.schema.ts';
 import { AppError } from '../utils/app-error.ts';
 
-const create = (userId: number, data: CreateTaskInput) =>
-  prisma.task.create({ data: { ...data, userId } });
+const create = async (userId: number, data: CreateTaskInput) => {
+  const task = await prisma.task.create({
+    data: { ...data, userId }
+  });
+  return task;
+};
 
-const getAll = (userId: number) =>
-  prisma.task.findMany({ where: { userId }, orderBy: [{ createdAt: 'desc' }, { id: 'desc' }] });
+const getAll = async (userId: number) => {
+  const tasks = await prisma.task.findMany({
+    where: { userId },
+    orderBy: [{ createdAt: 'desc' }, { id: 'desc' }]
+  });
+  return tasks;
+};
 
 const getById = async (id: number, userId: number) => {
-  const task = await prisma.task.findFirst({ where: { id, userId } });
-  if (!task) throw new AppError(404, 'Task not found');
+  const task = await prisma.task.findFirst({
+    where: { id, userId }
+  });
+  if (!task) {
+    throw new AppError(
+      404,
+      'TASK_NOT_FOUND',
+      'Task not found'
+    );
+  }
   return task;
 };
 
 const update = async (id: number, userId: number, data: UpdateTaskInput) => {
-  try {
-    return await prisma.task.update({ where: { id, userId }, data });
-  } catch (error) {
-    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
-      throw new AppError(404, 'Task not found');
-    }
-    throw error;
+  const task = await prisma.task.findFirst({
+    where: { id, userId }
+  });
+  if (!task) {
+    throw new AppError(
+      404,
+      'TASK_NOT_FOUND',
+      'Task not found'
+    );
   }
+  const updatedTask = await prisma.task.update({
+    where: { id, userId },
+    data
+  });
+  return updatedTask;
 };
 
 const remove = async (id: number, userId: number) => {
-  const result = await prisma.task.deleteMany({ where: { id, userId } });
-  if (result.count === 0) throw new AppError(404, 'Task not found');
+  const task = await prisma.task.findFirst({
+    where: { id, userId }
+  });
+  if (!task) {
+    throw new AppError(
+      404,
+      'TASK_NOT_FOUND',
+      'Task not found'
+    );
+  }
+  await prisma.task.delete({
+    where: { id, userId }
+  });
 };
 
-export const taskService = { create, getAll, getById, update, remove };
+export const taskService = {
+  create,
+  getAll,
+  getById,
+  update,
+  remove
+};

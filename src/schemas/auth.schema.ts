@@ -1,16 +1,17 @@
 import z from 'zod';
 
-const nonemptyString = z.string().refine(value => value.trim().length > 0);
-
 export const registerSchema = z.object({
-  name: nonemptyString,
-  email: z.string().regex(/^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/),
+  name: z.string().trim().min(1),
+  email: z.email(),
   password: z.string().min(8)
 });
 
 export const loginSchema = z.object({
-  email: nonemptyString,
-  password: nonemptyString
+  email: z.string().trim().min(1),
+  password: z.string().min(1).refine(value => value.trim().length > 0)
 });
 
-export type RegisterInput = z.infer<typeof registerSchema>;
+export const jwtPayloadSchema = z.object({
+  userId: z.number().int().positive().max(2147483647),
+  exp: z.number()
+});

@@ -5,7 +5,7 @@ import { getAuthUser } from '../middlewares/authenticate.ts';
 
 const register = async (req: Request, res: Response) => {
   const data = registerSchema.parse(req.body);
-  const user = await authService.register(data);
+  const user = await authService.register(data.name, data.email, data.password);
   res.status(201).json(user);
 };
 
@@ -16,7 +16,8 @@ const login = async (req: Request, res: Response) => {
 };
 
 const getMe = async (req: Request, res: Response) => {
-  const user = await authService.getMe(getAuthUser(req).userId);
+  const authUser = getAuthUser(req);
+  const user = await authService.getMe(authUser.userId);
   res.status(200).json(user);
 };
 
