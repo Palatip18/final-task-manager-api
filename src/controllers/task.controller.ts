@@ -1,8 +1,11 @@
-import type { Request, Response } from 'express';
-import { createTaskSchema, updateTaskSchema } from '../schemas/task.schema.ts';
-import { intIdSchema } from '../schemas/common.schema.ts';
-import { getAuthUser } from '../middlewares/authenticate.ts';
-import { taskService } from '../services/task.service.ts';
+import type { Request, Response } from "express";
+import {
+  createTaskSchema,
+  updateTaskSchema,
+} from "../schemas/task.schema.ts";
+import { intIdSchema } from "../schemas/common.schema.ts";
+import { getAuthUser } from "../middlewares/authenticate.ts";
+import { taskService } from "../services/task.service.ts";
 
 const create = async (req: Request, res: Response) => {
   const data = createTaskSchema.parse(req.body);
@@ -44,5 +47,5 @@ export const taskController = {
   getAll,
   getById,
   update,
-  remove
+  remove,
 };
